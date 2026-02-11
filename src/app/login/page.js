@@ -145,12 +145,17 @@ export default function LoginPage() {
                     </p>
 
                     <div className="flex gap-4">
-                        <a
-                            href="http://localhost:5000/api/auth/google"
-                            className="btn-outline w-full py-3 text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 no-underline hover:text-white"
-                        >
-                            G-Suite
-                        </a>
+                      <a
+  href={
+    (process.env.NEXT_PUBLIC_API_URL ||
+      "https://login-authbackend-production.up.railway.app/api") +
+    "/auth/google"
+  }
+  className="btn-outline w-full py-3 text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 no-underline hover:text-white"
+>
+  G-Suite
+</a>
+
                     </div>
                 </div>
 
