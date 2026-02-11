@@ -1,26 +1,243 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --color-brand-primary: #FF3366;
+  --color-brand-secondary: #00F0FF;
+  --color-background: #020205;
+  --color-surface: rgba(10, 10, 20, 0.6);
+  --color-surface-hover: rgba(20, 20, 40, 0.8);
+  --color-border-glow: rgba(255, 51, 102, 0.3);
+  --color-accent-glow: rgba(0, 240, 255, 0.3);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #020205;
+  --foreground: #f0f0f5;
+  --grid-color: rgba(255, 255, 255, 0.05);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* CYBER GRID BACKGROUND */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(255, 51, 102, 0.05) 0%, transparent 60%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+  pointer-events: none;
+  animation: grid-pulse 10s ease-in-out infinite alternate;
+}
+
+.bg-mesh::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(255, 51, 102, 0.08), transparent 40%);
+  filter: blur(60px);
+  z-index: -2;
+}
+
+@keyframes grid-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* GLASS CARD - neo-brutalist tech feel */
+.glass {
+  background: var(--color-surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 20px 50px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.glass:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 30px 60px -15px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 51, 102, 0.1);
+  /* Glow effect */
+}
+
+/* TYPOGRAPHY */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* ANIMATIONS */
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-slide-up {
+  opacity: 0;
+  animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* CUSTOM INPUTS */
+.premium-input-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.premium-input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 1rem 1rem;
+  font-family: var(--font-body);
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  /* Slightly squarish for tech feel */
+}
+
+.premium-input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+/* FLOATING LABEL ANIMATION */
+.input-label {
+  pointer-events: none;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  padding: 0 4px;
+  color: #888;
+}
+
+.premium-input:focus+.input-label,
+.premium-input:not(:placeholder-shown)+.input-label {
+  transform: translateY(-130%) scale(0.85);
+  /* Move up and scale down */
+  left: 0.8rem;
+  color: var(--color-brand-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.premium-input:not(:placeholder-shown):not(:focus)+.input-label {
+  color: var(--color-brand-primary);
+  /* Different color when filled but valid */
+}
+
+/* BUTTONS */
+.btn-cyber {
+  background: linear-gradient(135deg, var(--color-brand-primary), #D90044);
+  color: white;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.btn-cyber:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(255, 51, 102, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-cyber::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.btn-cyber:hover::after {
+  left: 100%;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ccc;
+  font-family: var(--font-body);
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  border-color: white;
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
 }
